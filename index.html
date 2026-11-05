@@ -158,7 +158,7 @@
         const dateTimeInput = document.getElementById('dateTimeInput');
         const locationSelect = document.getElementById('locationSelect');
         const hemisphereSelect = document.getElementById('hemisphereSelect');
-        const headerLocationLabel = document.getElementById('headerLocationLabel');
+        TheHeaderLocationLabel = document.getElementById('headerLocationLabel');
         
         const modal = document.getElementById('configModal');
         document.getElementById('btnOpenModal').onclick = () => modal.classList.remove('hidden');
@@ -208,7 +208,7 @@
 
             // Rótulo da barra superior
             const selectedOpt = locationSelect.options[locationSelect.selectedIndex];
-            headerLocationLabel.textContent = selectedOpt.value === 'AUTO' ? '⚙️ Auto (Dispositivo)' : selectedOpt.text.split('(')[0];
+            document.getElementById('headerLocationLabel').textContent = selectedOpt.value === 'AUTO' ? '⚙️ Auto (Dispositivo)' : selectedOpt.text.split('(')[0];
         }
 
         // Sincronização Cidade <-> Hemisfério
