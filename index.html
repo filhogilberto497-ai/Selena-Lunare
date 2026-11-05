@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selena Lunare • Guia Lunar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8 antialiased flex flex-col justify-between">
+
+    <div class="max-w-xl mx-auto w-full space-y-6">
+        
+        <!-- Cabeçalho Minimalista com Status de Localização e Configuração -->
+        <header class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+            <div>
+                <h1 class="text-xl md:text-2xl font-cinzel font-bold tracking-widest text-amber-100">SELENA LUNARE</h1>
+                <p class="text-xs text-slate-400">Guia Lunar • Ciclos & Intenções</p>
+            </div>
+            
+            <!-- Botão Discreto de Edição de Localização / Data -->
+            <button id="btnOpenModal" class="flex items-center space-x-2 bg-slate-900 border border-slate-800 hover:border-amber-500/50 px-3 py-1.5 rounded-full text-xs transition">
+                <span id="headerLocationLabel" class="text-slate-300 font-medium">⚙️ Auto (Dispositivo)</span>
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Representação Realista da Lua -->
+        <main class="space-y-6">
+            
+            <div class="bg-slate-900/40 border border-slate-800/80 p-8 rounded-3xl flex flex-col items-center justify-center text-center space-y-4 shadow-2xl relative overflow-hidden">
+                <!-- Brilho de fundo -->
+                <div class="absolute w-48 h-48 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+
+                <!-- Disco da Lua Vetorial -->
+                <div class="relative w-48 h-48 rounded-full bg-slate-900 border border-slate-700/50 shadow-2xl overflow-hidden">
+                    <!-- Textura e Mares Lunares -->
+                    <svg class="absolute inset-0 w-full h-full opacity-30 text-slate-400 pointer-events-none" viewBox="0 0 100 100" fill="currentColor">
+                        <circle cx="35" cy="35" r="12" />
+                        <circle cx="65" cy="40" r="16" />
+                        <circle cx="50" cy="70" r="18" />
+                        <circle cx="25" cy="65" r="8" />
+                        <circle cx="75" cy="70" r="6" />
+                    </svg>
+
+                    <!-- Iluminação e Sombra (Terminator Realista) -->
+                    <div id="moonIllumination" class="absolute inset-0 bg-amber-100/90 rounded-full transition-all duration-500"></div>
+                    <div id="moonShadow" class="absolute inset-0 bg-slate-950/95 transition-all duration-500"></div>
+                </div>
+
+                <div>
+                    <h2 id="phaseName" class="text-2xl font-cinzel font-bold text-amber-200">Lua Nova</h2>
+                    <p id="phaseAge" class="text-xs text-slate-400 mt-1">Idade: 0.0 dias</p>
+                </div>
+            </div>
+
+            <!-- Guia Filosófico de Intenções -->
+            <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-4 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-widest text-amber-400" id="phaseMotto">NOVOS COMEÇOS</span>
+                    <span id="illuminationBadge" class="text-xs px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 font-medium">0% iluminada</span>
+                </div>
+                <p id="phaseDescription" class="text-slate-300 text-sm leading-relaxed">É hora de uma lousa em branco, comece a reunir seus pensamentos e planejar.</p>
+                
+                <div class="pt-2 border-t border-slate-800/80">
+                    <span class="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block mb-2">Atributos & Energias:</span>
+                    <div id="phaseKeywords" class="flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Horários Estimados -->
+            <div class="bg-slate-900/40 border border-slate-800/60 p-4 rounded-2xl grid grid-cols-2 gap-4 text-center">
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Nascer da Lua</span>
+                    <span id="moonriseTime" class="text-sm font-semibold text-slate-200">--:--</span>
+                </div>
+                <div>
+                    <span class="text-[10px] uppercase tracking-wider text-slate-400 block">Pôr da Lua</span>
+                    <span id="moonsetTime" class="text-sm font-semibold text-slate-200">--:--</span>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="text-center text-[11px] text-slate-400">
+            Selena Lunare • Sincronizado automaticamente com o seu dispositivo
+        </footer>
+
+    </div>
+
+    <!-- Modal Flutuante de Configurações (Abre ao clicar no ícone ⚙️) -->
+    <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-slate-900 border border-slate-800 p-6 rounded-3xl w-full max-w-md space-y-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-base font-bold text-slate-200">Configurações de Local & Data</h3>
+                <button id="btnCloseModal" class="text-slate-400 hover:text-slate-200 text-lg">✕</button>
+            </div>
+
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 font-semibold mb-1">Data e Hora</label>
+                    <input type="datetime-local" id="dateTimeInput" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 font-semibold mb-1">Localidade / Cidade</label>
+                    <select id="locationSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <option value="AUTO" data-utc="auto" data-hem="auto" selected>⚙️ Auto (Dispositivo)</option>
+                        <optgroup label="Brasil">
+                            <option value="AC" data-utc="-5" data-hem="south">Rio Branco, AC (UTC-5)</option>
+                            <option value="AM" data-utc="-4" data-hem="south">Manaus, AM (UTC-4)</option>
+                            <option value="SP" data-utc="-3" data-hem="south">São Paulo / Brasília (UTC-3)</option>
+                            <option value="FND" data-utc="-2" data-hem="south">Fernando de Noronha (UTC-2)</option>
+                        </optgroup>
+                        <optgroup label="Internacional">
+                            <option value="LIS" data-utc="0" data-hem="north">Lisboa, Portugal (UTC+0)</option>
+                            <option value="NYC" data-utc="-5" data-hem="north">Nova Iorque, EUA (UTC-5)</option>
+                            <option value="TOK" data-utc="9" data-hem="north">Tóquio, Japão (UTC+9)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase text-slate-400 font-semibold mb-1">Hemisfério</label>
+                    <select id="hemisphereSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-200">
+                        <option value="south" selected>Sul (América do Sul, etc.)</option>
+                        <option value="north">Norte (Europa, EUA, etc.)</option>
+                    </select>
+                </div>
+
+                <button id="btnGPS" type="button" class="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 py-2.5 rounded-xl text-xs font-medium transition">
+                    📍 Detectar via GPS do Aparelho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Lógica e Cálculos -->
+    <script>
+        const moonPhases = [
+            { min: 0, max: 1.84, name: "Lua Nova", motto: "NOVOS COMEÇOS", desc: "É hora de uma lousa em branco, comece a reunir seus pensamentos e planejar.", keywords: ["inícios claros", "limpeza", "novos começos", "clareza"] },
+            { min: 1.84, max: 5.53, name: "Lua Crescente", motto: "DEFINIR INTENÇÕES", desc: "Envie suas esperanças e desejos para o mundo.", keywords: ["intenções", "motivação", "atração", "sucesso"] },
+            { min: 5.53, max: 9.22, name: "Quarto Crescente", motto: "TOMAR AÇÃO", desc: "Quando enfrentar obstáculos, não vacile. É hora de seguir em frente.", keywords: ["criatividade", "adivinhação", "calma", "ação"] },
+            { min: 9.22, max: 12.91, name: "Lua Gibosa Crescente", motto: "REFINAR E APERFEIÇOAR", desc: "Observe e alinhe suas esperanças com o universo. O ímpeto está crescendo.", keywords: ["refinar", "observar", "boa saúde", "ímpeto"] },
+            { min: 12.91, max: 16.61, name: "Lua Cheia", motto: "COLHER ESFORÇOS", desc: "Um tempo para colher as intenções e desejos das luas passadas.", keywords: ["carregar", "limpeza", "poder", "clareza", "cura"] },
+            { min: 16.61, max: 20.30, name: "Lua Gibosa Minguante", motto: "INTROSPECÇÃO", desc: "Volte-se para dentro, pense em seus objetivos e seja grato.", keywords: ["desfazer amarras", "introspecção"] },
+            { min: 20.30, max: 23.99, name: "Quarto Minguante", motto: "LIBERTAR E SOLTAR", desc: "Deixe ir os hábitos que o prendem e fazem mal.", keywords: ["quebrar maus hábitos", "banimento"] },
+            { min: 23.99, max: 29.53, name: "Lua Minguante", motto: "RENDIÇÃO", desc: "Reestruturar e descansar. Tudo bem se sentir vazio às vezes.", keywords: ["equilíbrio", "sucesso", "sabedoria", "conquista"] }
+        ];
+
+        const dateTimeInput = document.getElementById('dateTimeInput');
+        const locationSelect = document.getElementById('locationSelect');
+        const hemisphereSelect = document.getElementById('hemisphereSelect');
+        const headerLocationLabel = document.getElementById('headerLocationLabel');
+        
+        const modal = document.getElementById('configModal');
+        document.getElementById('btnOpenModal').onclick = () => modal.classList.remove('hidden');
+        document.getElementById('btnCloseModal').onclick = () => modal.classList.add('hidden');
+
+        // Inicializar com Data e Hora do Dispositivo
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        dateTimeInput.value = now.toISOString().slice(0, 16);
+
+        function calculateMoonAge(date) {
+            const refDate = new Date(2000, 0, 6, 18, 14, 0);
+            const diffDays = (date - refDate) / (1000 * 60 * 60 * 24);
+            const cycle = 29.5305877057;
+            let age = diffDays % cycle;
+            return age < 0 ? age + cycle : age;
+        }
+
+        function updateUI() {
+            const date = new Date(dateTimeInput.value);
+            const age = calculateMoonAge(date);
+            const illuminationPct = Math.round(((1 - Math.cos((age / 29.530587) * 2 * Math.PI)) / 2) * 100);
+            
+            const phase = moonPhases.find(p => age >= p.min && age < p.max) || moonPhases[0];
+            const hemisphere = hemisphereSelect.value;
+
+            document.getElementById('phaseName').textContent = phase.name;
+            document.getElementById('phaseAge').textContent = `Idade: ${age.toFixed(1)} dias`;
+            document.getElementById('phaseMotto').textContent = phase.motto;
+            document.getElementById('phaseDescription').textContent = phase.desc;
+            document.getElementById('illuminationBadge').textContent = `${illuminationPct}% iluminada`;
+
+            document.getElementById('phaseKeywords').innerHTML = phase.keywords
+                .map(kw => `<span class="text-[11px] bg-slate-950 border border-slate-800 text-slate-300 px-2.5 py-1 rounded-lg">#${kw}</span>`)
+                .join('');
+
+            // Horários Estimados
+            let riseHour = Math.floor((6 + (age * 0.8)) % 24);
+            let setHour = (riseHour + 12) % 24;
+            document.getElementById('moonriseTime').textContent = `${String(riseHour).padStart(2, '0')}:30`;
+            document.getElementById('moonsetTime').textContent = `${String(setHour).padStart(2, '0')}:15`;
+
+            // Sombra e Curvatura do Terminator
+            const shadow = document.getElementById('moonShadow');
+            let mid = age < 14.7 ? (hemisphere === 'south' ? 100 - illuminationPct : illuminationPct) : (hemisphere === 'south' ? illuminationPct : 100 - illuminationPct);
+            shadow.style.clipPath = `polygon(${mid}% 0, 100% 0, 100% 100%, ${mid}% 100%)`;
+
+            // Rótulo da barra superior
+            const selectedOpt = locationSelect.options[locationSelect.selectedIndex];
+            headerLocationLabel.textContent = selectedOpt.value === 'AUTO' ? '⚙️ Auto (Dispositivo)' : selectedOpt.text.split('(')[0];
+        }
+
+        // Sincronização Cidade <-> Hemisfério
+        locationSelect.addEventListener('change', () => {
+            const opt = locationSelect.options[locationSelect.selectedIndex];
+            const hem = opt.getAttribute('data-hem');
+            if (hem && hem !== 'auto') hemisphereSelect.value = hem;
+            updateUI();
+        });
+
+        hemisphereSelect.addEventListener('change', updateUI);
+        dateTimeInput.addEventListener('change', updateUI);
+
+        document.getElementById('btnGPS').onclick = () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                    hemisphereSelect.value = pos.coords.latitude < 0 ? 'south' : 'north';
+                    locationSelect.value = 'AUTO';
+                    updateUI();
+                    modal.classList.add('hidden');
+                });
+            }
+        };
+
+        updateUI();
+    </script>
+</body>
+</html>
